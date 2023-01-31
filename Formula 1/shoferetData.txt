@@ -1,0 +1,10 @@
+Mario Maserati 3 3 1 221 22
+Magnussen Mercedes 3 9 8 620 62
+Zhou AlphaTauri 6 3 8 618 59
+Vettel Redbull 13 4 5 743 61
+Jim Haas 4 7 7 593 57
+Rei AstonMartin 6 5 9 657 57
+Schumacher Ferrari 6 5 6 620 60
+Sargeant AlfaRomeo 12 12 6 825 62
+Nico McLaren 5 12 2 590 60
+Albon Reno 1 2 1 123 19
