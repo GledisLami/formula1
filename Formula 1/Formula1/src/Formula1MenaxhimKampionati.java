@@ -136,6 +136,81 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         shkruaj.close();
     }
 
+
+    //exception handling per te gjithe inputet numerike nga perdoruesi
+    public static int exception(Scanner sc, int input){
+        boolean Error = false;
+        while (!Error){
+            try {
+                input = sc.nextInt();
+                Error=true;
+            } catch (InputMismatchException ime){
+                System.err.println("Ju lutem fusni nje numer");
+                sc.nextLine();
+            }
+        }
+        return input;
+    }
+
+    public void menu(Formula1MenaxhimKampionati formula1, Scanner sc) throws FileNotFoundException {
+        formula1.lexoGaruesF();
+        formula1.lexoGaratF();
+        formula1.lexoDatatF();
+        int ch;
+        System.out.println("Pershendetje!\n");
+        do {
+            System.out.println("\nZgjidh nje opsion\n1. Shfaq tabelen e garuesve\n" +
+                    "2. Shfaq statistikat per nje garues\n" +
+                    "3. Shto nje garues\n4. Ndrysho garuesin per nje skuader\n" +
+                    "5. Hiq nje garues\n6. Krijo nje gare\n7. Dil nga programi\n\nOpsioni i zgjedhur: ");
+            ch = 0;
+            ch = exception(sc, ch);
+            switch (ch){
+                case 1: {
+                    formula1.piketRendZbrites();
+                    formula1.printoGaruesit();
+                    formula1.perditesoGaruesF();
+                    break;
+                }
+                case 2: {
+                    formula1.teDhenaGarues();
+
+                    break;
+                }
+                case 3: {
+                    formula1.shtoGarues();
+                    break;
+                }
+                case 4: {
+                    formula1.ndryshoGarues();
+                    break;
+                }
+                case 5: {
+                    formula1.hiqGarues();
+                    break;
+                }
+                case 6: {
+                    if(listaGaruesve.size()==0){
+                        System.out.println("Nuk mund te simulosh gare me 0 shofere");
+                    }else{
+                        formula1.krijoGareManualisht();
+                        formula1.perditesoGaratF();
+                        formula1.perditesoDatatF();
+                        formula1.perditesoGaruesF();
+                    }
+                    break;
+                }
+                case 7: {
+                    System.out.println("Zhvilluar nga: \nGledis Lami\n Aleksander Loli\n Emila Filipi\n" +
+                            "Lorna Lelcaj\n Lorena Celami\n\nMirupafshim!");
+                    formula1.perditesoGaruesF();
+                    formula1.perditesoGaratF();
+                    break;
+                }
+            }
+        }while (ch!=7);
+    }
+
     //kerkohet garuesi nese ndodhet. ne te kundert shtohet ne liste
     public void shtoGarues(){
         if (listaGaruesve.size()==10){
@@ -213,31 +288,44 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         }else System.err.println("0 shofere\n");
     }
 
+
+
+    /*Metode qe do perdoret pasi kryhet nje gare. I shton piket, numrin e garave,
+    dhe statistikat per vendin e pare, te dyte dhe te trete.
+     */
+    public void shtoPiket(){
+        for (i = 0; i< listaGaruesve.size(); i++){
+            listaGaruesve.get(i).setNrGarave(listaGaruesve.get(i).getNrGarave()+1);
+        }
+        int[] piket = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
+        for (i = 0; i < listaGaruesve.size(); i++){
+            listaGaruesve.get(i).setPiket(listaGaruesve.get(i).getPiket() + piket[i]);
+        }
+        if (listaGaruesve.size()>=1){
+            listaGaruesve.get(0).setNrVendPare(listaGaruesve.get(0).getNrVendPare()+1);
+            if (listaGaruesve.size()>=2){
+                listaGaruesve.get(1).setNrVendiDyte(listaGaruesve.get(1).getNrVendiDyte()+1);
+            }if (listaGaruesve.size()>=3){
+                listaGaruesve.get(2).setNrVendiTrete(listaGaruesve.get(2).getNrVendiTrete()+1);
+            }
+        }
+    }
+
+
     //afishon te gjithe garusit
     public void printoGaruesit(){
         if (listaGaruesve.size()>0) {
-            System.out.println("--------------------------------------------------------------" +
-                    "------------------------------------------------------------------");
+            System.out.println("*********************************************************" +
+                    "*******************************************************************");
             for (i = 0; i < listaGaruesve.size(); i++) {
                 System.out.println("Garuesi " + (i+1) + ": " + listaGaruesve.get(i).toString());
             }
+            System.out.println("*********************************************************" +
+                    "*******************************************************************");
             System.out.println();
-        }else System.err.println("0 shofere\n");
+        }else System.err.println("0 garues\n");
     }
 
-    //afishon te gjithe garuesit ne nderfaqen grafike
-    public String printoGaruesitGui(){
-        StringBuilder teksti = new StringBuilder();
-        if (listaGaruesve.size()>0) {
-            teksti.append("--------------------------------------------------------------------------------------------------------------------------------");
-            teksti.append("\n");
-            for (i = 0; i < listaGaruesve.size(); i++) {
-                teksti.append("Shoferi ").append(i + 1).append(": ").append(listaGaruesve.get(i).toString());
-            }
-            teksti.append("\n");
-        }else teksti.append("0 shofere\n");
-        return teksti.toString();
-    }
 
     /*
     metoda me posht perzien pozicionet e garuesve me anen e nje objekti random,
@@ -260,6 +348,7 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         }
         //listaShofereveTemp = new ArrayList<>();
     }
+
 
     //I njejti funksionalitet si metoda me siper, por garuesi qe e fiton zgjidhet me probabilitet
     public void perziejVendetGaruesProbabilitet(){
@@ -295,26 +384,6 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         perziejVendetGarues();
     }
 
-    /*Metode qe do perdoret pasi kryhet nje gare. I shton piket, numrin e garave,
-    dhe statistikat per vendin e pare, te dyte dhe te trete.
-     */
-    public void shtoPiket(){
-        for (i = 0; i< listaGaruesve.size(); i++){
-            listaGaruesve.get(i).setNrGarave(listaGaruesve.get(i).getNrGarave()+1);
-        }
-        int[] piket = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
-        for (i = 0; i < listaGaruesve.size(); i++){
-            listaGaruesve.get(i).setPiket(listaGaruesve.get(i).getPiket() + piket[i]);
-        }
-        if (listaGaruesve.size()>=1){
-            listaGaruesve.get(0).setNrVendPare(listaGaruesve.get(0).getNrVendPare()+1);
-            if (listaGaruesve.size()>=2){
-                listaGaruesve.get(1).setNrVendiDyte(listaGaruesve.get(1).getNrVendiDyte()+1);
-            }if (listaGaruesve.size()>=3){
-                listaGaruesve.get(2).setNrVendiTrete(listaGaruesve.get(2).getNrVendiTrete()+1);
-            }
-        }
-    }
 
     /* gjeneron nje date random, mund te perdoret libraria localDateTime per te
     marre garen ne momentin qe kriohet gara */
@@ -342,7 +411,7 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         System.out.println("\nRezultatet: ");
         for (i = 0; i < listaGaruesve.size(); i++){
             garuesTemp.add(listaGaruesve.get(i));
-            }
+        }
         for (i = 0; i< garuesTemp.size(); i++){
             System.out.println((i+1) + ": " + garuesTemp.get(i).getEmri());
         }
@@ -350,113 +419,6 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         historiaGarave.add(garuesTemp);
         garuesTemp = new ArrayList<>();
         System.out.println();
-    }
-
-    public String krijoGareGui(){
-        StringBuilder teksti = new StringBuilder();
-        Data data = krijoDate();
-        listaDatave.add(data);
-        teksti.append(data);
-        teksti.append("\nPozicionet perfundimtare: ");
-        for (i = 0; i < listaGaruesve.size(); i++){
-            garuesTemp.add(listaGaruesve.get(i));
-        }
-        for (i = 0; i< garuesTemp.size(); i++){
-            teksti.append(i + 1).append(": ").append(garuesTemp.get(i).getEmri());
-            teksti.append("\n");
-        }
-        shtoPiket();
-        historiaGarave.add(garuesTemp);
-        garuesTemp = new ArrayList<>();
-        teksti.append("\n");
-        return teksti.toString();
-    }
-
-    //Metodat me poshte sherbejne per renditjen e garuesve sipas kritereve te pikeve ose fitoreve.
-    public void piketRendRrites(){
-        for (i = 0; i< listaGaruesve.size(); i++) {
-            for (j = i + 1; j < listaGaruesve.size(); j++) {
-                if (listaGaruesve.get(i).getPiket() > listaGaruesve.get(j).getPiket()) {
-                    Collections.swap(listaGaruesve, i, j);
-                }else if (listaGaruesve.get(i).getPiket() == listaGaruesve.get(j).getPiket()){
-                    if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
-                        Collections.swap(listaGaruesve, i, j);
-                    }
-                }
-            }
-        }
-    }
-    public void piketRendZbrites(){
-        for (i = 0; i< listaGaruesve.size(); i++) {
-            for (j = i + 1; j < listaGaruesve.size(); j++) {
-                if (listaGaruesve.get(i).getPiket() < listaGaruesve.get(j).getPiket()) {
-                    Collections.swap(listaGaruesve, i, j);
-                }else if (listaGaruesve.get(i).getPiket() == listaGaruesve.get(j).getPiket()){
-                    if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
-                        Collections.swap(listaGaruesve, i, j);
-                    }
-                }
-            }
-        }
-    }
-    public void fitoretRendZbrites(){
-        for (i = 0; i< listaGaruesve.size(); i++) {
-            for (j = i + 1; j < listaGaruesve.size(); j++) {
-                if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
-                    Collections.swap(listaGaruesve, i, j);
-                }
-            }
-        }
-    }
-    //kerkon nje garues dhe i afishon te dhenat ne nderfaqen grafike
-    public String kerkoGarues(String emri){
-        StringBuilder teskti = new StringBuilder();
-        for (i = 0; i < historiaGarave.size(); i++){
-            for (j = 0; j< historiaGarave.get(i).size(); j++){
-                if (emri.equalsIgnoreCase(historiaGarave.get(i).get(j).getEmri())){
-                    teskti.append(listaDatave.get(i).toString()).append("\nPozicioni ").append((j+1)).append("\n");
-                    teskti.append("\n");
-                    break;
-                }
-            }
-        }
-        return teskti.toString();
-    }
-
-    //Metode qe rendit garat ne rend rrites sipas datave.
-    public void datatRendRrites(){
-        for (i = 0; i< listaDatave.size(); i++) {
-            for (j = i + 1; j < listaDatave.size(); j++) {
-                if (listaDatave.get(i).getViti() > listaDatave.get(j).getViti()) {
-                    Collections.swap(listaDatave, i, j);
-                    Collections.swap(historiaGarave, i, j);
-                }else if(listaDatave.get(i).getViti() == listaDatave.get(j).getViti()){
-                    if (listaDatave.get(i).getMuaji() > listaDatave.get(j).getMuaji()){
-                        Collections.swap(listaDatave, i, j);
-                        Collections.swap(historiaGarave, i, j);
-                    }else if(listaDatave.get(i).getMuaji() == listaDatave.get(j).getMuaji()){
-                        if (listaDatave.get(i).getDita() > listaDatave.get(j).getDita()){
-                            Collections.swap(listaDatave, i, j);
-                            Collections.swap(historiaGarave, i, j);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    //Krijon nje string qe do te afishohet ne gui per historikun e te gjitha garave
-    public String printoGaratGui(){
-        StringBuilder teksti = new StringBuilder();
-        for (i = 0; i < historiaGarave.size(); i++) {
-            teksti.append("Data  ").append(listaDatave.get(i).toString()).append(":\nRezultatet: \n");
-            for (j = 0; j < historiaGarave.get(i).size(); j++) {
-                teksti.append(j + 1).append(". ").append(historiaGarave.get(i).get(j).getEmri()).append(" ").append(historiaGarave.get(i).get(j).getSkuadra());
-                teksti.append("\n");
-            }
-            teksti.append("\n");
-        }
-        return teksti.toString();
     }
 
     //Metode me te cilen perdoruesi mund te krijoje manualisht nje gare
@@ -513,100 +475,130 @@ public class Formula1MenaxhimKampionati implements MenaxhimKampionati{
         listaDatave.add(data);
         historiaGarave.add(listaGaruesve);
     }
-    public void menu(Formula1MenaxhimKampionati formula1, Scanner sc) throws FileNotFoundException {
-        formula1.lexoGaruesF();
-        formula1.lexoGaratF();
-        formula1.lexoDatatF();
-        int ch;
-        System.out.println("Pershendetje!\n");
-        do {
-            System.out.println("\nZgjidh nje opsion\n1. Krijo nje shofer\n2. Fshi nje shofer\n" +
-                    "3. Ndrysho shoferin e nje skuadre\n4. Shfaq te dhenat per 1 shofer\n" +
-                    "5. Shfaq te gjithe shoferet\n6. Simulo nje gare\n7. Simulo gare me shans\n" +
-                    "8. Fut nje gare manualisht\n9. Dil nga programi\n\nOpsioni i zgjedhur: ");
-            ch = 0;
-            ch = exception(sc, ch);
-            switch (ch){
-                case 1: {
-                    formula1.shtoGarues();
-                    break;
-                }
-                case 2: {
-                    formula1.hiqGarues();
-                    break;
-                }
-                case 3: {
-                    formula1.ndryshoGarues();
-                    break;
-                }
-                case 4: {
-                    formula1.teDhenaGarues();
-                    break;
-                }
-                case 5: {
-                    formula1.piketRendZbrites();
-                    formula1.printoGaruesit();
-                    formula1.perditesoGaruesF();
-                    break;
-                }
-                case 6: {
-                    if (listaGaruesve.size()==0){
-                        System.out.println("Nuk mund te simulosh gare me 0 shofere");
-                    }else{
-                        formula1.perziejVendetGarues();
-                        formula1.krijoGare(); //brenda ndodhet updateStatistikat();
-                        formula1.perditesoGaratF();
-                        formula1.perditesoDatatF();
-                        formula1.perditesoGaruesF();
-                    }
-                    break;
-                }
-                case 7: {
-                    if (listaGaruesve.size()==0){
-                        System.out.println("Nuk mund te simulosh gare me 0 shofere");
-                    }else{
-                        formula1.perziejVendetGaruesProbabilitet();
-                        formula1.krijoGare();
-                        formula1.perditesoGaratF();
-                        formula1.perditesoDatatF();
-                        formula1.perditesoGaruesF();
-                    }
-                    break;
-                }
-                case 8: {
-                    if(listaGaruesve.size()==0){
-                        System.out.println("Nuk mund te simulosh gare me 0 shofere");
-                    }else{
-                        formula1.krijoGareManualisht();
-                        formula1.perditesoGaratF();
-                        formula1.perditesoDatatF();
-                        formula1.perditesoGaruesF();
-                    }
-                    break;
-                }
-                case 9: {
-                    System.out.println("Zhvilluar nga: \nGledis Lami\n Aleksander Loli\n Emila Filipi\n" +
-                            "Lorna Lelcaj\n Lorena Celami\n\nMirupafshim!");
-                    formula1.perditesoGaruesF();
-                    formula1.perditesoGaratF();
-                    break;
-                }
-            }
-        }while (ch!=9);
-    }
 
-    //exception handling per te gjithe inputet numerike nga perdoruesi
-    public static int exception(Scanner sc, int input){
-        boolean Error = false;
-        while (!Error){
-            try {
-                input = sc.nextInt();
-                Error=true;
-            } catch (InputMismatchException ime){
-                System.err.println("Ju lutem fusni nje numer");
-                sc.nextLine();
+
+    //Metodat me poshte sherbejne per renditjen e garuesve sipas kritereve te pikeve ose fitoreve.
+    public void piketRendRrites(){
+        for (i = 0; i< listaGaruesve.size(); i++) {
+            for (j = i + 1; j < listaGaruesve.size(); j++) {
+                if (listaGaruesve.get(i).getPiket() > listaGaruesve.get(j).getPiket()) {
+                    Collections.swap(listaGaruesve, i, j);
+                }else if (listaGaruesve.get(i).getPiket() == listaGaruesve.get(j).getPiket()){
+                    if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
+                        Collections.swap(listaGaruesve, i, j);
+                    }
+                }
             }
         }
-        return input;
+    }
+    public void piketRendZbrites(){
+        for (i = 0; i< listaGaruesve.size(); i++) {
+            for (j = i + 1; j < listaGaruesve.size(); j++) {
+                if (listaGaruesve.get(i).getPiket() < listaGaruesve.get(j).getPiket()) {
+                    Collections.swap(listaGaruesve, i, j);
+                }else if (listaGaruesve.get(i).getPiket() == listaGaruesve.get(j).getPiket()){
+                    if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
+                        Collections.swap(listaGaruesve, i, j);
+                    }
+                }
+            }
+        }
+    }
+    public void fitoretRendZbrites(){
+        for (i = 0; i< listaGaruesve.size(); i++) {
+            for (j = i + 1; j < listaGaruesve.size(); j++) {
+                if (listaGaruesve.get(i).getNrVendPare() < listaGaruesve.get(j).getNrVendPare()) {
+                    Collections.swap(listaGaruesve, i, j);
+                }
+            }
+        }
+    }
+
+    //Metode qe rendit garat ne rend rrites sipas datave.
+    public void datatRendRrites(){
+        for (i = 0; i< listaDatave.size(); i++) {
+            for (j = i + 1; j < listaDatave.size(); j++) {
+                if (listaDatave.get(i).getViti() > listaDatave.get(j).getViti()) {
+                    Collections.swap(listaDatave, i, j);
+                    Collections.swap(historiaGarave, i, j);
+                }else if(listaDatave.get(i).getViti() == listaDatave.get(j).getViti()){
+                    if (listaDatave.get(i).getMuaji() > listaDatave.get(j).getMuaji()){
+                        Collections.swap(listaDatave, i, j);
+                        Collections.swap(historiaGarave, i, j);
+                    }else if(listaDatave.get(i).getMuaji() == listaDatave.get(j).getMuaji()){
+                        if (listaDatave.get(i).getDita() > listaDatave.get(j).getDita()){
+                            Collections.swap(listaDatave, i, j);
+                            Collections.swap(historiaGarave, i, j);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //kerkon nje garues dhe i afishon te dhenat ne nderfaqen grafike
+    public String kerkoGarues(String emri){
+        StringBuilder teskti = new StringBuilder();
+        for (i = 0; i < historiaGarave.size(); i++){
+            for (j = 0; j< historiaGarave.get(i).size(); j++){
+                if (emri.equalsIgnoreCase(historiaGarave.get(i).get(j).getEmri())){
+                    teskti.append(listaDatave.get(i).toString()).append("\nPozicioni ").append((j+1)).append("\n");
+                    teskti.append("\n");
+                    break;
+                }
+            }
+        }
+        return teskti.toString();
+    }
+
+
+    //afishon te gjithe garuesit ne nderfaqen grafike
+    public String printoGaruesitGui(){
+        StringBuilder teksti = new StringBuilder();
+        if (listaGaruesve.size()>0) {
+            teksti.append("************************************************************************************************************************************");
+            teksti.append("\n");
+            for (i = 0; i < listaGaruesve.size(); i++) {
+                teksti.append("Garuesi ").append(i + 1).append(": ").append(listaGaruesve.get(i).toString());
+            }
+            teksti.append("\n");
+        }else teksti.append("0 garues\n");
+        return teksti.toString();
+    }
+
+    public String krijoGareGui(){
+        StringBuilder teksti = new StringBuilder();
+        Data data = krijoDate();
+        listaDatave.add(data);
+        teksti.append(data);
+        teksti.append("\nPozicionet perfundimtare: \n");
+        for (i = 0; i < listaGaruesve.size(); i++){
+            garuesTemp.add(listaGaruesve.get(i));
+        }
+        for (i = 0; i< garuesTemp.size(); i++){
+            teksti.append(i + 1).append(": ").append(garuesTemp.get(i).getEmri());
+            teksti.append("\n");
+        }
+        shtoPiket();
+        historiaGarave.add(garuesTemp);
+        garuesTemp = new ArrayList<>();
+        teksti.append("\n");
+        return teksti.toString();
+    }
+
+
+
+    //Krijon nje string qe do te afishohet ne gui per historikun e te gjitha garave
+    public String printoGaratGui(){
+        StringBuilder teksti = new StringBuilder();
+        for (i = 0; i < historiaGarave.size(); i++) {
+            teksti.append("Data  ").append(listaDatave.get(i).toString()).append(":\nRezultatet: \n");
+            for (j = 0; j < historiaGarave.get(i).size(); j++) {
+                teksti.append(j + 1).append(". ").append(historiaGarave.get(i).get(j).getEmri()).append(" ").append(historiaGarave.get(i).get(j).getSkuadra());
+                teksti.append("\n");
+            }
+            teksti.append("\n");
+        }
+        return teksti.toString();
     }
 }
