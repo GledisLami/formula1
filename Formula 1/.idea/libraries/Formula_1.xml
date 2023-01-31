@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Formula 1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/Formula_1_jar/Formula 1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
